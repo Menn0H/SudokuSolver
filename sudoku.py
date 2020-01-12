@@ -120,13 +120,41 @@ def isStartingNumber(x, y, num, board):
 	
 	return outcome
 
+def isPlayable(x, y, board):
+    number = 0
+    playable = False
+
+    for i in range(1,10):
+        if isValidMove(x, y, i, board):
+            number = i
+            playable = True 
+            break
+
+    return playable, number
+
 def solveSudoku(board):
-	for i in range(9):
-		for j in range(9):
-			if not isStartingNumber(i, j, board[i][j], board):
-			    return 0
-				
+    i, j = 0, 0
+
+    while i < 10:
+        while j < 10:
+            if not isStartingNumber(i, j, board[i][j], board):
+                playable, number = isPlayable(i, j, board)
+
+                if playable:
+                    playMove(i, j, number, board)
+                    j += 0
+                else:
+                    if j >= 0:
+                        j -= 1
+                    else:
+                        i -= 1
+            else:
+                j += 1
+        i += 1
+    printBoard(board)
+
 
 print(isValidMove(5, 7, 6, boardUnc), isValidSolution(boardCom))
 print(startingNumbers(boardUnc))
 print(isStartingNumber(1,2,8,boardUnc))
+solveSudoku(boardUnc)
