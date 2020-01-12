@@ -1,28 +1,28 @@
 #!/usr/bin/env python3
 
 boardUnc = [[0,0,0,2,0,0,9,0,0],
-	    [0,0,9,6,0,0,4,1,0],
-	    [2,0,0,0,0,0,0,0,6],
+	        [0,0,9,6,0,0,4,1,0],
+	        [2,0,0,0,0,0,0,0,6],
 
-	    [0,0,8,0,0,0,5,9,0],
-	    [9,0,4,0,0,0,0,7,0],
-	    [0,1,2,0,0,3,0,0,0],
+	        [0,0,8,0,0,0,5,9,0],
+	        [9,0,4,0,0,0,0,7,0],
+	        [0,1,2,0,0,3,0,0,0],
 
-	    [0,0,0,0,9,5,0,0,4],
-	    [0,0,3,0,8,1,0,0,0],
-	    [0,0,0,7,0,0,0,0,0]]
+	        [0,0,0,0,9,5,0,0,4],
+	        [0,0,3,0,8,1,0,0,0],
+	        [0,0,0,7,0,0,0,0,0]]
 
 boardCom = [[3,4,6,2,1,8,9,5,7],
-	    [8,5,9,6,3,7,4,1,2],
-	    [2,7,1,5,4,9,3,8,6],
+	        [8,5,9,6,3,7,4,1,2],
+	        [2,7,1,5,4,9,3,8,6],
 
-	    [7,6,8,1,2,4,5,9,3],
-	    [9,3,4,8,5,6,2,7,1],
-	    [5,1,2,9,7,3,6,4,8],
+	        [7,6,8,1,2,4,5,9,3],
+	        [9,3,4,8,5,6,2,7,1],
+	        [5,1,2,9,7,3,6,4,8],
 
-	    [1,2,7,3,9,5,8,6,4],
-	    [6,9,3,4,8,1,7,2,5],
-	    [4,8,5,7,6,2,1,3,9]]
+	        [1,2,7,3,9,5,8,6,4],
+	        [6,9,3,4,8,1,7,2,5],
+	        [4,8,5,7,6,2,1,3,9]]
 
 
 #returns in which square (1-9) the position is in
@@ -62,21 +62,24 @@ def square(x, y, board):
 
 #returns if number played on position x,y is valid
 def isValidMove(x, y, num, board):
-	row = board[x]
-	row = [i for i in row if i != 0]
+    row = board[x]
+    row = [i for i in row if i != 0]
+    #row.append(num)
 
-	col = []
-	for i in range(9):
-		col.append(board[i][y])	
-	col = [i for i in col if i != 0]
-	
-	sqr = getSquare(getSquareNum(x,y), board)	
-	sqr = [i for i in sqr if i != 0]
+    col = []
+    for i in range(9):
+        col.append(board[i][y])	
+    col = [i for i in col if i != 0]
+    #col.append(num)
 
-	if allUnique(row) and allUnique(col) and allUnique(sqr):
-		return True
-	else:
-		return False
+    sqr = getSquare(getSquareNum(x,y), board)	
+    sqr = [i for i in sqr if i != 0]
+    #sqr.append(num)
+
+    if allUnique(row) and allUnique(col) and allUnique(sqr):
+        return True
+    else:
+        return False
 
 def allUnique(n):
 	seen = set()
@@ -89,12 +92,6 @@ def isValidSolution(board):
 		for j in range(9):
 			bools.append(isValidMove(i, j, board[i][j], board))
 	return all(bools)
-
-def playMove(x, y, num, board):
-	if isValidMove(x, y, num, board):
-		board[x][y] = num
-	else:
-		print("Invalid move")
 
 def printBoard(board):
 	for i in board:
@@ -110,51 +107,62 @@ def startingNumbers(board):
 	
 	return numbers
 
-def isStartingNumber(x, y, num, board):
-	numbers = startingNumbers(board)
+def isStartingNumber(x, y, num, startNum, board):
 	outcome = False	
 
-	for i in numbers:
+	for i in startNum:
 		if i[0] == x and i[1] == y and i[2] == num:
 			outcome = True
 	
 	return outcome
 
-def isPlayable(x, y, board):
-    number = 0
-    playable = False
-
-    for i in range(1,10):
-        if isValidMove(x, y, i, board):
-            number = i
-            playable = True 
-            break
-
-    return playable, number
-
 def solveSudoku(board):
     i, j = 0, 0
+    startNum = startingNumbers(board)
+    number = 1
+    noValidMove = False
 
-    while i < 10:
-        while j < 10:
-            if not isStartingNumber(i, j, board[i][j], board):
-                playable, number = isPlayable(i, j, board)
-
-                if playable:
-                    playMove(i, j, number, board)
-                    j += 0
+    while i < 9:
+        while j < 9:
+            if i >= 9:
+                break
+            elif not isStartingNumber(i, j, board[i][j], startNum, board):
+                if noValidMove:
+                    board[i][j] += 1
+                    number = board[i][j]
+                    noValidMove = False
                 else:
-                    if j >= 0:
+                    board[i][j] = number
+                    if number > 9:
+                        board[i][j] = 0
                         j -= 1
+                        if j < 0:
+                            j = 8
+                            i -= 1
+                        noValidMove = True
+                        number = 1
+                    elif isValidMove(i, j, number, board):
+                        j += 1
+                        if j == 9:
+                            j = 0
+                            i += 1
+                        number = 1
                     else:
-                        i -= 1
+                        number += 1
             else:
-                j += 1
-        i += 1
-    printBoard(board)
+                if noValidMove:
+                    j -= 1
+                    if j < 0:
+                        j = 8
+                        i -= 1
+                else:
+                    j += 1
+                    if j > 8:
+                        j = 0
+                        i += 1
 
-
-print(isValidMove(5, 7, 6, boardUnc), isValidSolution(boardCom))
-print(startingNumbers(boardUnc))
-print(isStartingNumber(1,2,8,boardUnc))
+printBoard(boardUnc)
+print("\n")
 solveSudoku(boardUnc)
+printBoard(boardUnc)
+print(isValidSolution(boardUnc))
