@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+boardHardU = [[0,0,8,0,0,0,0,5,0],
+              [0,2,9,0,0,0,4,1,8],
+              [0,0,0,0,2,0,0,0,0],
+              [0,0,0,0,5,3,1,0,0],
+              [6,0,7,4,0,1,3,0,9],
+              [0,0,1,7,9,0,0,0,0],
+              [0,0,0,0,1,0,0,0,0],
+              [3,4,2,0,0,0,8,6,0],
+              [0,8,0,0,0,0,9,0,0]]
 
 boardUnc = [[0,0,0,2,0,0,9,0,0],
 	        [0,0,9,6,0,0,4,1,0],
@@ -161,8 +170,8 @@ def solveSudoku(board):
                         j = 0
                         i += 1
 
-printBoard(boardUnc)
+printBoard(boardHardU)
 print("\n")
-solveSudoku(boardUnc)
-printBoard(boardUnc)
-print(isValidSolution(boardUnc))
+solveSudoku(boardHardU)
+printBoard(boardHardU)
+#print(isValidSolution(boardUnc))
