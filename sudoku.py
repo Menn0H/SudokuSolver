@@ -229,8 +229,6 @@ def drawIndications():
 
 def setup():
     screen.fill(white)
-
-    #drawGrid(540)
     drawGrid()
     drawIndications()
     drawStartingNumbers()
@@ -238,6 +236,9 @@ def setup():
 
 def event(event):
     if event.type == pygame.QUIT:
+        pygame.display.quit()
+        pygame.quit()
+        exit()
         running = False
 
 def execute():
