@@ -143,7 +143,7 @@ def solveSudoku():
                     drawBlank(i,j)
                 else:
                     drawNumber(number, i, j, blue)
-                drawGrid(540)
+                drawGrid()
                 drawIndications()
                 pygame.display.update()
 
@@ -187,30 +187,31 @@ black = pygame.Color('black')
 blue = pygame.Color('blue')
 
 running = True
-width, height = 1000, 800
+size = 800
+width, height = size, size 
+squareSize = width // 9
+edgeBorder = (width % 9) // 2
 
 pygame.init()
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Sudoku Solver")
 
-def drawGrid(width):
-    squareSize = width // 9
-
-    for i in range(20, (width + 20), squareSize):
-        for j in range(20, (width + 20), squareSize):
+def drawGrid():
+    eb = edgeBorder
+    for i in range(eb, (width-squareSize), squareSize):
+        for j in range(eb, (height-squareSize), squareSize):
             pygame.draw.rect(screen, black, (i,j,squareSize,squareSize), 3)
 
 def drawNumber(number, x, y, colour):
-    font = pygame.font.Font('freesansbold.ttf', 58)
+    font = pygame.font.Font('freesansbold.ttf', 92)
     text = font.render(str(number), True, colour)
     textRect = text.get_rect()
-    textRect.center = ((50 + y * 60), (55 + x * 60))
+    textRect.center = ((50 + y * squareSize), (55 + x * squareSize))
     screen.blit(text, textRect)
 
 def drawBlank(x, y):
-    squareSize = width // 9
-    blank = pygame.Rect(0,0,(squareSize-50), (squareSize-50))
-    blank.center = ((50 + y * 60), (55 + x * 60))
+    blank = pygame.Rect(0,0,(squareSize), (squareSize))
+    blank.center = ((50 + y * squareSize), (55 + x * squareSize))
     pygame.draw.rect(screen, white, blank,0)
 
 def drawStartingNumbers():
@@ -220,15 +221,17 @@ def drawStartingNumbers():
         drawNumber(i[2], i[0], i[1], black)
 
 def drawIndications():
-    pygame.draw.line(screen, blue, (20,200), (560,200), 6)
-    pygame.draw.line(screen, blue, (20,380), (560,380), 6)
-    pygame.draw.line(screen, blue, (200,20), (200,560), 6)
-    pygame.draw.line(screen, blue, (380,20), (380,560), 6)
+    eb = edgeBorder
+    pygame.draw.line(screen, blue, (eb,(squareSize*3+eb)), ((squareSize*9+eb),(squareSize*3+eb)), 6)
+    pygame.draw.line(screen, blue, (eb,(squareSize*6+eb)), ((squareSize*9+eb),(squareSize*6+eb)), 6)
+    pygame.draw.line(screen, blue, ((squareSize*3+eb),eb), ((squareSize*3+eb),(squareSize*9+eb)), 6)
+    pygame.draw.line(screen, blue, ((squareSize*6+eb),eb), ((squareSize*6+eb),(squareSize*9+eb)), 6)
 
 def setup():
     screen.fill(white)
 
-    drawGrid(540)
+    #drawGrid(540)
+    drawGrid()
     drawIndications()
     drawStartingNumbers()
     pygame.display.update()
